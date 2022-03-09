@@ -21,6 +21,10 @@ builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
 
 builder.Services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
 
+builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
+
+builder.Services.AddScoped<IBookRepository, BookRepositoryImplementation>();
+
 var connection = builder.Configuration["MySQLConnection:MySQLConnectionString"];
 
 if (environment.IsDevelopment())
@@ -45,7 +49,7 @@ app.MapControllers();
 app.Run();
 
 void MigrateDatabase(string connection)
-{
+ {
     try
     {
         var evolveConnection = new MySqlConnection(connection);

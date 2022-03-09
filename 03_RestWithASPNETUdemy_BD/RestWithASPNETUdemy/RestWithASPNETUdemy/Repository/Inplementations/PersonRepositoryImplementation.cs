@@ -82,6 +82,7 @@ namespace RestWithASPNETUdemy.Repository.Inplementations
                      
         public bool Exists(long id)
         {
+            var person = this.context.People.Any(x => x.Id.Equals(id));
             return this.context.People.Any(x => x.Id.Equals(id));
         }
     }
