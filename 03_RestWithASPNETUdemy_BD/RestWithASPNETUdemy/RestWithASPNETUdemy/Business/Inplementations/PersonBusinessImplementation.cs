@@ -1,39 +1,48 @@
-﻿using RestWithASPNETUdemy.Model;
+﻿using RestWithASPNETUdemy.Data.Converter.Implementations;
+using RestWithASPNETUdemy.Data.VO;
+using RestWithASPNETUdemy.Model;
 using RestWithASPNETUdemy.Model.Context;
 using RestWithASPNETUdemy.Repository;
+using RestWithASPNETUdemy.Repository.Generic;
 
 namespace RestWithASPNETUdemy.Business.Inplementations
 {
     public class PersonBusinessImplementation : IPersonBusiness
     {
-        private IPersonRepository repository;
+        private IRepository<Person> Repository;
+        private readonly PersonConverter converter;
 
-        public PersonBusinessImplementation(IPersonRepository repository)
+        public PersonBusinessImplementation(IRepository<Person> Repository)
         {
-            this.repository = repository;
+            this.Repository = Repository;
+            this.converter = new PersonConverter();
         }
-        public Person FindById(long id)
+        public PersonVO FindById(long id)
         {
-            return this.repository.FindById(id);
-        }
-
-        public List<Person> GetAll()
-        {
-            return this.repository.GetAll();
+            return this.converter.Parse(this.Repository.FindById(id));
         }
 
-        public Person Create(Person person)
+        public List<PersonVO> GetAll()
         {
-            return this.repository.Create(person);
+            return this.converter.Parse(this.Repository.GetAll());
         }
-        public Person Update(Person person)
+
+        public PersonVO Create(PersonVO person)
         {
-            return repository.Update(person);
+            var personEntity = this.converter.Parse(person);
+            personEntity = this.Repository.Create(personEntity);
+            return this.converter.Parse(personEntity);
+        }
+        public PersonVO Update(PersonVO person)
+        {
+            var personEntity = this.converter.Parse(person);
+            var entity = this.Repository.Update(personEntity);
+            return this.converter.Parse(entity);
         }
 
         public void Delete(long id)
         {
-            repository.Delete(id);
+            Repository.Delete(id);
         }       
     }
 }

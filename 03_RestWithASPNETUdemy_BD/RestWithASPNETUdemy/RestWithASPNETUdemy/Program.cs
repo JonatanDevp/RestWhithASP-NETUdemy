@@ -3,8 +3,7 @@ using MySqlConnector;
 using RestWithASPNETUdemy.Business;
 using RestWithASPNETUdemy.Business.Inplementations;
 using RestWithASPNETUdemy.Model.Context;
-using RestWithASPNETUdemy.Repository;
-using RestWithASPNETUdemy.Repository.Inplementations;
+using RestWithASPNETUdemy.Repository.Generic;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,11 +18,10 @@ builder.Services.AddApiVersioning();
 
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
 
-builder.Services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
-
 builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
 
-builder.Services.AddScoped<IBookRepository, BookRepositoryImplementation>();
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
 var connection = builder.Configuration["MySQLConnection:MySQLConnectionString"];
 

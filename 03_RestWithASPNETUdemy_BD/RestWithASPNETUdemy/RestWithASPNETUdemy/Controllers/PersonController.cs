@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RestWithASPNETUdemy.Business;
+using RestWithASPNETUdemy.Data.Converter.Implementations;
+using RestWithASPNETUdemy.Data.VO;
 using RestWithASPNETUdemy.Model;
 
 namespace RestWithASPNETUdemy.Controllers
@@ -11,11 +13,12 @@ namespace RestWithASPNETUdemy.Controllers
     {
         private readonly ILogger<PersonController> _logger;
         private IPersonBusiness personBusiness;
-
+        private readonly PersonConverter converter;
         public PersonController(ILogger<PersonController> logger, IPersonBusiness personBusiness)
         {
             _logger = logger;
             this.personBusiness = personBusiness;
+            converter = new PersonConverter();
         }
 
         [HttpGet()]
@@ -33,14 +36,15 @@ namespace RestWithASPNETUdemy.Controllers
         }
 
         [HttpPost()]
-        public IActionResult Post([FromBody] Person person)
+        public IActionResult Post([FromBody] PersonVO person)
         {           
+
             if (person == null) return BadRequest();
             return Ok(this.personBusiness.Create(person));
         }
 
         [HttpPut()]
-        public IActionResult Put([FromBody] Person person)
+        public IActionResult Put([FromBody] PersonVO person)
         {
             if (person == null) return BadRequest();
             return Ok(this.personBusiness.Update(person));

@@ -1,38 +1,46 @@
-﻿using RestWithASPNETUdemy.Model;
-using RestWithASPNETUdemy.Repository.Inplementations;
+﻿using RestWithASPNETUdemy.Data.Converter.Implementations;
+using RestWithASPNETUdemy.Data.VO;
+using RestWithASPNETUdemy.Model;
+using RestWithASPNETUdemy.Repository.Generic;
 
 namespace RestWithASPNETUdemy.Business.Inplementations
 {
     public class BookBusinessImplementation : IBookBusiness
     {
-        private IBookRepository repository;
-        public BookBusinessImplementation(IBookRepository repository)
+        private IRepository<Book> Repository;
+        private readonly BookConverter converter;
+        public BookBusinessImplementation(IRepository<Book> Repository)
         {
-            this.repository = repository;
+            this.Repository = Repository;
+            this.converter = new BookConverter();
         }
-        public Book Create(Book book)
+        public BookVO Create(BookVO book)
         {
-            return this.repository.Create(book);
+            var bookEntity = this.converter.Parse(book);
+            bookEntity = this.Repository.Create(bookEntity);
+            return this.converter.Parse(bookEntity);
         }
 
         public void Delete(long id)
         {
-            this.repository.Delete(id);
+            this.Repository.Delete(id);
         }
 
-        public Book FindById(long id) 
+        public BookVO FindById(long id) 
         {
-            return this.repository.FindById(id);
+            return this.converter.Parse(this.Repository.FindById(id));
         }
 
-        public List<Book> GetAll()
+        public List<BookVO> GetAll()
         {
-            return this.repository.GetAll();
+            return this.converter.Parse(this.Repository.GetAll());
         }
 
-        public Book Update(Book book)
+        public BookVO Update(BookVO book)
         {
-            return this.repository.Update(book);
+            var bookEntity = this.converter.Parse(book);
+            bookEntity = this.Repository.Update(bookEntity);
+            return this.converter.Parse(bookEntity);
         }
     }
 }
